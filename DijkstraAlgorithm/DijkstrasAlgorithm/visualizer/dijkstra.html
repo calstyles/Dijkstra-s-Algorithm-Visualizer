@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>Dijkstra: Rush Hour</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
+    <script src="https://unpkg.com/cytoscape/dist/cytoscape.min.js"></script>
+    <script src="https://unpkg.com/layout-base/layout-base.js"></script>
+    <script src="https://unpkg.com/cose-base/cose-base.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/cytoscape-cose-bilkent@4.1.0/cytoscape-cose-bilkent.min.js"></script>
+    <script src="output.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 14px;
+            margin: 0;
+        }
+
+        body * {
+            box-sizing: border-box;
+        }
+
+        header {
+            height: 10vh;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: solid 1px #CCC;
+            background-color: #F4F4F4;
+            padding: 0 100px;
+        }
+        .form {
+            display: flex;
+            align-items: center;
+            width: 300px;
+            justify-content: space-between;
+        }
+
+        main {
+            min-height: 90vh;
+        }
+
+        h1,
+        h2,
+        h3 {
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+
+        select {
+            padding: 10px;
+        }
+
+        #cy {
+            width: 100%;
+            height: 90vh;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Dijkstra</h1>
+    </header>
+    <main>
+        <div id="cy"></div>
+    </main>
+
+    <script>
+
+
+        function draw() {
+            const h1El = document.querySelector('h1');
+            const cyEl = document.querySelector('#cy');
+            
+            h1El.innerHTML = `Dijkstra`;
+            cyEl.innerHTML = "";
+
+            
+            var cy = window.cy = cytoscape({
+
+                container: cyEl,
+
+                elements: graphData,
+
+                layout: {
+                    name: 'preset'
+                },
+
+                style: [
+                    {
+                        selector: 'node',
+                        style: {
+                            'background-color': '#CCC',
+                            'label': function (element) {
+                                const data = element.data();
+                                if (data.distance) {
+                                		return `${data.label} (${data.distance.toFixed(1)})`;
+                                } else {
+                                		return data.label;
+                                }
+                            },
+                            'text-valign': 'center',
+                            'text-halign': 'center',
+                            'font-size': '14px',
+                            'width': 100,
+                            'height': 100,
+                            'font-weight': 'bold',
+                            'color': 'black'
+                        }
+                    },
+
+                    {
+                        selector: 'edge',
+                        style: {
+                            'width': function (element) {
+                                const data = element.data();
+                                return '10px';
+                            },
+                            'label': function (element) {
+                                const data = element.data();
+                                return data.weight.toFixed(1);
+                            },
+                            'target-arrow-shape': 'triangle',
+                            'line-color': function (element) {
+                                const data = element.data();
+                                return (data.inTree) ? 'teal' : '#CCC';
+                            },
+                            'line-style': function (element) {
+                                const data = element.data();
+                                return (data.inTree) ? 'solid' : 'dotted';
+                            },
+                            'text-background-color': 'white',
+                            'text-background-opacity': 1,
+                            'text-background-padding': '5px',
+                            'text-border-width': '1px',
+                            'text-border-color': 'black',
+                            'text-border-style': 'solid',
+                            'target-arrow-color': function (element) {
+                                const data = element.data();
+                                return (data.inTree) ? 'teal' : '#CCC';
+                            },
+                            'curve-style': 'bezier',
+                            'font-size': '14px',
+                        }
+                    }
+                ]
+
+            });
+        }
+
+        draw();
+    </script>
+
+</body>
+
+</html>
